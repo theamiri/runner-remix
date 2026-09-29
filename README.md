@@ -32,17 +32,20 @@ No build step and no dependencies: it's plain JavaScript modules and canvas. The
 
 ## Install
 
-Runner Remix isn't on the Chrome Web Store yet, so you load it from source:
+Runner Remix isn't on the Chrome Web Store yet, so you install it in Developer mode:
 
-1. Clone the repo, or use **Code → Download ZIP** and unzip it. Put it somewhere permanent, because Chrome keeps loading the extension from that folder.
-   ```sh
-   git clone https://github.com/theamiri/runner-remix.git
-   ```
+1. Download the `.zip` from the [latest release](https://github.com/theamiri/runner-remix/releases/latest) and unzip it. Keep the folder somewhere permanent, because Chrome loads the extension from it every time.
 2. Open `chrome://extensions` and turn on **Developer mode** (top right).
-3. Click **Load unpacked** and select the `runner-remix` folder.
+3. Click **Load unpacked** and select the unzipped folder, the one with `manifest.json` inside.
 4. Pin the bunny icon from the puzzle-piece menu. A welcome tab opens on install.
 
-To update, run `git pull`, then click the reload icon on the extension card in `chrome://extensions`.
+To update, replace the folder's files with the ones from the new release, then click the reload icon on the extension card in `chrome://extensions`. Keep the same folder and your settings and scores stay.
+
+To work on the code, clone the repo and load the `runner-remix` folder the same way. Update with `git pull` and the reload icon.
+
+```sh
+git clone https://github.com/theamiri/runner-remix.git
+```
 
 ## Playing
 
@@ -146,11 +149,20 @@ Contributions are welcome: new runners, worlds and obstacles especially. Please:
 - keep art original: no sprites or characters copied from other games or brands
 - check your changes in Chrome with **Load unpacked** before opening a pull request
 
-## Publishing to the Chrome Web Store
+## Releases and the Chrome Web Store
 
-Zip the extension without `docs/`, `dev/` and `.git/`, with `manifest.json` at the root of the zip. Upload it in the Chrome Web Store Developer Dashboard, which needs a one-time developer registration. The listing also needs:
+Each [release](https://github.com/theamiri/runner-remix/releases) comes with a zip of just the extension files, with `manifest.json` at the root. To build one from a checkout, using the version from `manifest.json` in the file name:
+
+```sh
+git archive --format=zip -o runner-remix-1.0.0.zip HEAD \
+  manifest.json background.js popup.html popup.js popup.css \
+  game.html game.js game.css ui.css src icons fonts LICENSE
+```
+
+The same zip is what you upload to the Chrome Web Store Developer Dashboard, which needs a one-time developer registration. The listing also needs:
 
 - 1280×800 screenshots
+- a 440×280 small promo tile
 - a short description
 - a single-purpose statement
 - a justification for `webNavigation`, which is used only to detect failed page loads for the optional offline takeover
