@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Runner Remix – custom offline runner game",
+  "short_name": "Runner Remix",
+  "version": "1.0.0",
+  "description": "An endless runner you can remix: pick animals, worlds and obstacles, and optionally swap Chrome's No-internet page for it.",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Runner Remix",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage"],
+  "optional_permissions": ["webNavigation"],
+  "commands": {
+    "open-game": {
+      "suggested_key": { "default": "Alt+Shift+R" },
+      "description": "Open the game in a new tab"
+    }
+  }
+}

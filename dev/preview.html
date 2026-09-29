@@ -1,0 +1,95 @@
+<!doctype html>
+<!--
+  Sprite & world preview for contributors.
+  Serve the repo root over HTTP (ES modules don't load from file://), e.g.
+    python3 -m http.server 8000
+  then open http://localhost:8000/dev/preview.html
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Runner Remix · sprite preview</title>
+  <style>
+    body { margin: 0; padding: 20px; font: 13px/1.4 system-ui, sans-serif; background: #f4f1ea; color: #222; }
+    h2 { margin: 28px 0 10px; font-size: 16px; }
+    h3 { margin: 14px 0 6px; font-size: 13px; font-weight: 600; }
+    .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+    .cell { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; color: #555; }
+    canvas { image-rendering: pixelated; }
+    .light { background: #cfe8f5; } .dark { background: #1d2233; } .mono { background: #f7f7f7; }
+    .world canvas { width: 640px; height: 200px; }
+  </style>
+</head>
+<body>
+  <p>Every frame at 4× with its auto outline and collision size. Reload after editing <code>src/data/*.js</code>.</p>
+  <h2>Runners</h2><div id="animals"></div>
+  <h2>Obstacles</h2><div id="obstacles" class="row"></div>
+  <h2>Worlds (day / night)</h2><div id="worlds"></div>
+  <script type="module">
+    import { ANIMALS } from '../src/data/animals.js';
+    import { OBSTACLES } from '../src/data/obstacles.js';
+    import { compileSprite, crashify, monoLook } from '../src/sprites.js';
+    import { WORLD_LIST, compileWorld, drawSky, drawClouds, drawLayers, drawGround, newClouds } from '../src/world.js';
+    import { W, H } from '../src/consts.js';
+    import { mulberry32 } from '../src/rng.js';
+
+    const S = 4;
+    function cell(parent, source, label, cls) {
+      const box = document.createElement('div');
+      box.className = 'cell';
+      const c = document.createElement('canvas');
+      c.width = source.width; c.height = source.height;
+      c.style.width = source.width * S + 'px'; c.style.height = source.height * S + 'px';
+      c.className = cls;
+      c.getContext('2d').drawImage(source, 0, 0);
+      box.append(c, Object.assign(document.createElement('span'), { textContent: label }));
+      parent.append(box);
+    }
+
+    for (const a of ANIMALS) {
+      const h = Object.assign(document.createElement('h3'), { textContent: `${a.name} (${a.id})` });
+      const row = Object.assign(document.createElement('div'), { className: 'row' });
+      document.getElementById('animals').append(h, row);
+      const frames = [['run 1', a.run[0]], ['run 2', a.run[1]], ['jump', a.jump], ['duck 1', a.duck[0]], ['duck 2', a.duck[1]], ['crash', crashify(a.run[0])]];
+      for (const [name, rows] of frames) {
+        const sp = compileSprite(rows, a.palette, { outline: a.outline });
+        cell(row, sp.canvas, `${name} ${sp.w}×${sp.h}`, 'light');
+      }
+      const s0 = compileSprite(a.run[0], a.palette, { outline: a.outline });
+      cell(row, s0.canvas, 'on dark', 'dark');
+      cell(row, monoLook(s0, '#535353'), 'classic', 'mono');
+    }
+
+    const obs = document.getElementById('obstacles');
+    for (const o of OBSTACLES) {
+      o.variants.forEach((v, vi) => v.forEach((rows, fi) => {
+        const sp = compileSprite(rows, o.palette, { outline: o.outline, solidMask: o.solidMask });
+        cell(obs, sp.canvas, `${o.id} ${vi + 1}.${fi + 1}`, 'light');
+      }));
+    }
+
+    const worlds = document.getElementById('worlds');
+    for (const def of WORLD_LIST) {
+      const cw = compileWorld(def.id);
+      const row = Object.assign(document.createElement('div'), { className: 'row world' });
+      worlds.append(Object.assign(document.createElement('h3'), { textContent: def.name }), row);
+      for (const night of [0, 1]) {
+        const c = document.createElement('canvas');
+        c.width = W; c.height = H;
+        const ctx = c.getContext('2d');
+        const st = { scroll: 120, night, frame: 10 };
+        drawSky(ctx, cw, st);
+        drawClouds(ctx, cw, newClouds(cw, mulberry32(3)), night);
+        drawLayers(ctx, cw, st);
+        drawGround(ctx, cw, st);
+        if (def.nightMode === 'invert' && night) {
+          ctx.globalCompositeOperation = 'difference';
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, W, H);
+        }
+        row.append(c);
+      }
+    }
+  </script>
+</body>
+</html>

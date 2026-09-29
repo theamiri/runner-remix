@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Runner Remix</title>
+  <link rel="icon" href="icons/icon32.png">
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="game.css">
+</head>
+<body>
+  <div id="net" class="net" hidden>
+    <span class="net-dot" aria-hidden="true"></span>
+    <span id="net-text" class="net-text">No internet connection</span>
+    <button id="net-action" type="button" class="net-btn">Try again</button>
+  </div>
+
+  <header class="bar">
+    <div class="brand"><img src="icons/icon48.png" alt="" width="26" height="26" class="px"><span>Runner Remix</span></div>
+    <div class="bar-actions">
+      <button id="btn-sound" class="icon-btn" type="button" aria-pressed="true" title="Sound (M)" aria-label="Sound">
+        <svg class="on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg class="off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 9.5l5 5M22 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button id="btn-full" class="icon-btn" type="button" title="Fullscreen (F)" aria-label="Fullscreen">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button id="btn-custom" class="btn" type="button" aria-expanded="false" aria-controls="drawer" title="Customize (C)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M6 14v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Customize</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <div class="frame" id="frame" tabindex="0" aria-label="Game area">
+      <canvas id="game" class="px" aria-label="Runner game: press space to jump and the down arrow to duck"></canvas>
+    </div>
+    <div class="meta">
+      <span id="meta-now" class="meta-now"></span>
+      <span class="keys"><kbd>Space</kbd> jump <kbd>&darr;</kbd> duck <kbd>Esc</kbd> pause <kbd>C</kbd> customize</span>
+    </div>
+  </main>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="drawer" aria-label="Customize" aria-hidden="true" inert>
+    <div class="drawer-head">
+      <h2>Customize</h2>
+      <button class="icon-btn" id="drawer-close" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <p class="drawer-note" id="drawer-note" hidden>You're mid-run: closing this panel starts a fresh run with your changes.</p>
+    <div id="customizer"></div>
+    <input type="file" id="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden>
+  </aside>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="game.js"></script>
+</body>
+</html>

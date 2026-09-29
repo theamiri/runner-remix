@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Runner Remix</title>
+  <link rel="stylesheet" href="ui.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><img src="icons/icon48.png" alt="" width="24" height="24" class="px"><span>Runner Remix</span></div>
+    <div class="hi" id="hi" title="Your best score">HI 00000</div>
+  </header>
+
+  <div class="preview" id="preview-wrap">
+    <canvas id="preview" class="px" aria-label="Live preview of your runner and world"></canvas>
+    <span class="preview-label" id="preview-label"></span>
+  </div>
+
+  <button id="play" class="play" type="button">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg>
+    <span>Play</span>
+  </button>
+
+  <div id="customizer"></div>
+
+  <footer class="foot" id="foot" hidden>
+    <div class="cz-switch-row foot-row">
+      <div class="cz-switch-text">
+        <label for="takeover" class="cz-switch-label">Replace Chrome's offline page</label>
+        <span class="cz-switch-desc">No internet (or chrome://dino)? This game opens instead. Chrome will ask for “browsing history” access, which is only used to spot failed page loads.</span>
+      </div>
+      <button id="takeover" type="button" role="switch" class="cz-switch" aria-checked="false"><span class="knob"></span></button>
+    </div>
+  </footer>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
